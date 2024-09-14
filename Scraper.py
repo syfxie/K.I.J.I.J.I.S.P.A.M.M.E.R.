@@ -30,3 +30,6 @@ class KijijiScraper:
                 )
 
         return df
+
+    def click_messages() -> None:
+        pass
