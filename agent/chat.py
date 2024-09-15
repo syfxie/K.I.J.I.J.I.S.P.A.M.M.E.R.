@@ -94,10 +94,7 @@ class MessagingAgent:
         except Exception as e:
             print(f"Error generating next message: {e}")
             return {}
-
-
-    def validate_response(response: str) -> bool:
-        return True
+        
 
 if __name__ == '__main__':
     agent = MessagingAgent(prompts.MSG_AGENT_SYSTEM_MSG)
