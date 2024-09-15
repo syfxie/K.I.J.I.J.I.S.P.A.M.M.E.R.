@@ -21,7 +21,7 @@ response_format = {
 }
 
 class MessagingAgent:
-    def __init__(self, system_msg=prompts.MSG_AGENT_SYSTEM_MSG, product_description=prompts.PRODUCT_PROMPT_EXAMPLE) -> None:
+    def __init__(self, system_msg=prompts.MSG_AGENT_SYSTEM_MSG, product_description=prompts.PRODUCT_DESCRIOTION_EXAMPLE) -> None:
         """
         Initialize the MessagingAgent with the provided system message and product description.
         
@@ -56,7 +56,7 @@ class MessagingAgent:
             return {}
 
 
-    def gen_next_msg(self, msg_history: dict) -> str:
+    def gen_next_msg(self, msg_history: dict, agents_to_update: list) -> str:
         """
         Generate the next message for each personality based on the provided message history.
         
@@ -82,9 +82,15 @@ class MessagingAgent:
                 response_format=response_format
             )
             self.history = response.chat_history
+            response_json = json.loads(response.text)
+
+            # Only return responses for agents that received messages from the seller
+            for key in response_json.keys():
+                if not key in agents_to_update:
+                    response_json[key] = ""
 
             # Return the messages as a JSON
-            return json.loads(response.text)
+            return response_json
         except Exception as e:
             print(f"Error generating next message: {e}")
             return {}

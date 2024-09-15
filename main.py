@@ -16,11 +16,13 @@ if __name__ == "__main__":
         is_update = orchestrator.check_for_update()
         if is_update: 
             print("THERE IS AN UPDATE -----")
-            messages = orchestrator.get_data()
-            print(messages)
+            agents_to_respond, messages = orchestrator.get_data()
+            print("New messages: ", messages)
+            print(f"Most Recent Agent: {agents_to_respond}")
+
             agent = MessagingAgent()
-            next_messages = agent.gen_next_msg(messages)
-            print(next_messages)
+            next_messages = agent.gen_next_msg(messages, agents_to_respond)
+            print("Agent responses: ", next_messages)
 
         time.sleep(10)
 

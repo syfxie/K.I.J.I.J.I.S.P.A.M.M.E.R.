@@ -93,14 +93,14 @@ You want to coordinate negotations with your different personalities to reach a 
 def next_msg_prompt(msgs):
     """
     Generates the next message to send for each of the personalities that received a response from the seller. 
-    If no response/if the latest message was sent by the user and not the seller, then return an empty string for that personality.
+    If no response/if the seller sent the last message, then return an empty string for that agent.
 
     Return: a JSON with the next message for each user.
         {
-            "Agent 1": casual buyer's next message,
-            "Agent 2": rude buyer's next message,
-            "Agent 3": lowball buyer's next message,
-            "Agent 4": urgent buyer's next message
+            "Agent 1": casual buyer's next message, or "" if no new message was received from the seller.
+            "Agent 2": rude buyer's next message, or "" if no new message was received from the seller.
+            "Agent 3": lowball buyer's next message, or "" if no new message was received from the seller.
+            "Agent 4": urgent buyer's next message, or "" if no new message was received from the seller.
         }
     Args:
         history (dict of dicts): {
@@ -124,7 +124,8 @@ Below are the negotiation histories for four different personalities:
 
 {msgs}
 
-Determine the next message for each personality. If the user's message was the last one in the conversation, return an empty string for that personality.
+Determine the next message for each personality. 
+If no response/if the seller sent the last message, then return an empty string for that agent. You don't want the agent to send two messages in a row.
 
 Your goal is to negotiate the best price. Adapt each personality's strategy accordingly and coordinate the personalities to work together.
 """

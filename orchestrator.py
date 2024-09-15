@@ -20,6 +20,8 @@ class Orchestrator:
             w: pd.DataFrame(columns=["direction", "text"]) for w in self.web_agents
         }
 
+        self.agents_with_message = []
+
         for i in range(count):
             self.web_agents[i].set_name(f"Agent {i + 1}")
             self.web_agents[i].set_username(ACCOUNTS[i]["username"])
@@ -32,21 +34,24 @@ class Orchestrator:
         return [agent.name for agent in self.web_agents]
 
     def check_for_update(self):
+        is_update = False
+        self.agents_with_message = []
         for agent in self.web_agents:
             new_df = agent._parse_convo()
             if len(self.dfs[agent]) < len(new_df):
                 self.dfs[agent] = new_df
+                self.agents_with_message.append(agent.name)
                 print(f"Agent {agent.name} has a new message!")
-                return True
+                is_update = True
         
-        return False
+        return is_update
 
     def get_data(self):
         res = {}
         for agent in self.web_agents:
             res[agent.name] = [tuple(row) for row in self.dfs[agent].values]
         
-        return res
+        return (self.agents_with_message, res)
 
     def close(self):
         for agent in self.web_agents:
