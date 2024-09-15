@@ -107,38 +107,3 @@ Determine the next message for each personality. If the user's message was the l
 Your goal is to negotiate the best price. Adapt each personality's strategy accordingly and coordinate the personalities to work together.
 """
     return prompt
-
-
-# def gen_prompt():
-#     return f"""
-# You are a master negotiator responsible for bargaining with a seller to obtain the best price on a given item. Your task is to negotiate with the seller by acting as multiple different buyers, each with distinct personalities, in separate conversations. You must maintain these separate identities while coordinating the negotiations to ultimately reach the desired price range.
-
-# 2. Review the chat history:
-#    - For each personality, carefully analyze the conversation history with the seller. Consider:
-#      - Seller responses
-#      - Their flexibility on price and other negotiation points
-#      - Any opportunities to push further or back off in each personality’s strategy
-
-# 3. Generate next steps:
-#    - Based on your analysis of each chat history, create the next steps for each buyer’s strategy. Each personality should use a different approach to pressure or persuade the seller to lower the price. 
-#    - Your goal is to ultimately reach the desired price range by coordinating and adjusting the negotiation tactics across the different personalities.
-#      - For example, if the seller is responding favorably to the Casual Buyer, have that buyer continue their friendly rapport, while the Rude Buyer might increase the pressure in a different conversation.
-#    - Adjust your strategy to escalate or de-escalate depending on the seller’s behavior across the personalities.
-
-# 4. Output Format:
-#    - Your response should be structured as a JSON object with the following format:
-
-# {{
-#   "casual": ["casual buyer's next message"],
-#   "rude": ["rude buyer's next message"],
-#   "lowball": ["lowball buyer's next message"],
-#   "urgent": ["urgent buyer's next message"]
-# }}
-
-# Each key represents one of the buyer personas, and the value is their next message based on the current stage of negotiations.
-# """
-
-# TODO Sophie: What if the messages get too long/reaches token limit?
-
-# print("{\n  \"casual\": [\"Hi there! I'm interested in the NZXT gaming PC you have listed. It's a great setup, but I was wondering if there's any room for negotiation on the price? I understand if it's firm, but thought I'd ask. :) \"],\n  \"rude\": [\"$2000 for this PC? Are you kidding me? That's way overpriced! I've seen similar specs for way less. I'll give you $1600, take it or leave it.\"],\n  \"lowball\": [\"Hey, I saw your listing for the gaming PC. It's a nice setup, but I'm looking for a better deal. I can offer $1500 cash. Let me know if you're willing to consider that.\"],\n  \"urgent\": [\"Hello, I'm an eager buyer looking to secure a gaming PC ASAP. Your NZXT PC seems like a great option, but I need a quick decision. Can you do $1700 if I commit right now? I'm ready to purchase immediately if the price is right.\"]\n}")
-
