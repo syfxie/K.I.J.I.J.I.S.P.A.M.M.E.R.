@@ -1,19 +1,12 @@
 import json
 import cohere
 
-from utils import *
+from agent.prompts import CLOSE_DEAL_SYSTEM_MSG
+from agent.utils import *
 
-
-SYSTEM_MSG = """
-You are an expert negotiation agent with the ability to analyze and understand conversations between buyers and sellers. Given the following chat history, your task is to determine if a deal has been reached.
-
-A "deal" is defined as a mutual agreement where both parties express clear consent on terms like price, quantity, or delivery method.
-Consider all forms of agreement, such as explicit confirmations (e.g., "Yes, we have a deal," or "Agreed") as well as implied consent (e.g., "Sounds good," or "I accept the offer").
-If a deal has been reached, identify the price of the deal. If a deal has not been reached, return no.
-"""
 
 class DealClosingAgent:
-    def __init__(self, system_msg=SYSTEM_MSG) -> None:
+    def __init__(self, system_msg=CLOSE_DEAL_SYSTEM_MSG) -> None:
         """
         Initialize the DealClosingAgent with the provided system message.
         
@@ -25,16 +18,14 @@ class DealClosingAgent:
     
     def check_deal_status(self, msgs):
         """
-        Determine if a deal has been reached based on the provided message history.
+        Given the message history of one conversation, determines if a deal has been reached.
         
         Args:
-            msgs (list): List of messages with sender and message content.
+            msgs: List of messages with sender and message content.
         
         Returns:
             bool: True if a deal has been closed, otherwise False.
         """
-        # # Convert message history to a string format expected by the API
-        # msg_history = json.dumps(msgs)
 
         try:
             response = self.client.chat(
@@ -76,5 +67,5 @@ if __name__ == '__main__':
         {"sender": "Seller", "message": "Thanks so much! I'll keep an eye out for the payment."}
     ]
     
-    agent = DealClosingAgent(SYSTEM_MSG)
+    agent = DealClosingAgent(CLOSE_DEAL_SYSTEM_MSG)
     print(agent.check_deal_status(sample_msg))

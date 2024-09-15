@@ -1,27 +1,27 @@
 import json
 import cohere
 
-import prompts
-from utils import *
+import agent.prompts as prompts
+from agent.utils import *
 
 
-# Response format of the client
+# Response format of the LLM
 response_format = {
     "type": "json_object",
     "schema": {
         "type": "object",
-        "required": ["casual", "rude", "lowball", "urgent"],
+        "required": ["Agent 1", "Agent 2", "Agent 3", "Agent 4"],
         "properties": {
-            'casual': {"type": "string"},
-            'rude': {"type": "string"},
-            'lowball': {"type": "string"},
-            'urgent': {"type": "string"}
+            'Agent 1': {"type": "string"},
+            'Agent 2': {"type": "string"},
+            'Agent 3': {"type": "string"},
+            'Agent 4': {"type": "string"}
         }
     }
 }
 
 class MessagingAgent:
-    def __init__(self, system_msg=prompts.SYSTEM_MSG, product_description=prompts.PRODUCT_PROMPT_EXAMPLE) -> None:
+    def __init__(self, system_msg=prompts.MSG_AGENT_SYSTEM_MSG, product_description=prompts.PRODUCT_PROMPT_EXAMPLE) -> None:
         """
         Initialize the MessagingAgent with the provided system message and product description.
         
@@ -66,9 +66,10 @@ class MessagingAgent:
         Returns:
             dict: The dictionary of the next message to send for each personality.
             Ex: {
-                "casual": "Hmm, let me think about that."
-                "urgent": "",
-                "lowball": "Sounds good, how about tomorrow".
+                "Agent 1": "Hmm, let me think about that."
+                "Agent 2": "",
+                "Agent 3": "Sounds good, how about tomorrow".
+                "Agent 4": "I'm not taking anything higher than 200."
             }
         """
         prompt = prompts.next_msg_prompt(msg_history)
@@ -81,6 +82,8 @@ class MessagingAgent:
                 response_format=response_format
             )
             self.history = response.chat_history
+
+            # Return the messages as a JSON
             return json.loads(response.text)
         except Exception as e:
             print(f"Error generating next message: {e}")
@@ -91,7 +94,7 @@ class MessagingAgent:
         return True
 
 if __name__ == '__main__':
-    agent = MessagingAgent(prompts.SYSTEM_MSG)
+    agent = MessagingAgent(prompts.MSG_AGENT_SYSTEM_MSG)
     print(agent.gen_initial_msg())
 
     # Sample message histories for testing

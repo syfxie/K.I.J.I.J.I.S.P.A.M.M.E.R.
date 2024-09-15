@@ -3,31 +3,16 @@ import json
 import pandas as pd
 import cohere
 
-from chat import MessagingAgent
-from utils import *
-
-SYSTEM_MSG = """
-    Your are a product recommendation assistant. Find the top 5 most relevant and credible listings based on the user query, and return their URL's.
-    If there are less than 5 listings given, return all.
-
-    Given:
-    - user_query (str): The product the user is looking for.
-    - listings (list of dicts): A list where each dict contains:
-        - 'Title': The name of the product.
-        - 'Description': A brief description of the product.
-        - 'Price': The price of the product.
-        - 'URL': The link to the product.
-
-    Returns:
-    - list of str: A list of the top 5 URLs that best match the user query.
-"""
+from agent.chat import MessagingAgent
+from agent.prompts import FILTER_SYSTEM_MSG
+from agent.utils import *
 
 listings_excel_path = "data.xlsx"
 dest_excel_path = "initial_msgs.xlsx"
 
 
 class FilteringAgent():
-    def __init__(self, system_msg=SYSTEM_MSG) -> None:
+    def __init__(self, system_msg=FILTER_SYSTEM_MSG) -> None:
         self.client = cohere.Client(API_KEY, log_warning_experimental_features=False)
         self.history=[
             {"role": "SYSTEM", "text": system_msg}
@@ -53,10 +38,13 @@ Return the URL's of the top 5 recommendations as a list.
             url_list  = str_to_list(response.text)
 
             messages_json = {}
+
+            # Generate an initial message for each of the recommended products
             for url in url_list:
                 agent = MessagingAgent()
                 messages_json[url] = agent.gen_initial_msg()
             
+            # Save the messages to an excel
             json_to_excel(messages_json, dest_excel_path)
             return messages_json
 
@@ -95,5 +83,5 @@ def str_to_list(s):
 
 
 if __name__ == '__main__':
-    agent = FilteringAgent(SYSTEM_MSG)
+    agent = FilteringAgent(FILTER_SYSTEM_MSG)
     print(agent.get_recommendations("I want a ThinkPad", listings_path=listings_excel_path))
