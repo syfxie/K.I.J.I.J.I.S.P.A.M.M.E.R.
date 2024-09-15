@@ -52,11 +52,11 @@ class WebAgent:
 
     def set_name(self, name: str):
         self.name = name
-    
+
     def set_username(self, username: str):
         self.username = username
 
-    def set_password(self, password: str):  
+    def set_password(self, password: str):
         self.password = password
 
     def login_kijiji(self):
@@ -87,10 +87,14 @@ class WebAgent:
 
     def _parse_convo(self) -> pd.DataFrame:
         # Locate the message list container
-        message_list_container = self.driver.find_element(By.CSS_SELECTOR, '[data-testid="MessageList"]')
+        message_list_container = self.driver.find_element(
+            By.CSS_SELECTOR, '[data-testid="MessageList"]'
+        )
 
         # Find all the message containers within the message list
-        message_elements = message_list_container.find_elements(By.CSS_SELECTOR, '[class^="messageContainer"]')
+        message_elements = message_list_container.find_elements(
+            By.CSS_SELECTOR, '[class^="messageContainer"]'
+        )
 
         # Initialize an empty list to store messages
         messages = []
@@ -99,10 +103,12 @@ class WebAgent:
         for message_element in message_elements:
             # Extract the direction (INBOUND or OUTBOUND)
             direction = message_element.get_attribute("data-qa-message-direction")
-            
+
             # Extract the message text (adjust this based on your actual HTML structure)
-            message_text = message_element.text  # This assumes the text is directly within the message element
-            
+            message_text = (
+                message_element.text
+            )  # This assumes the text is directly within the message element
+
             # Add the message to the list with its direction
             messages.append({"direction": "buyer" if direction == "OUTBOUND" else "seller", "text": message_text})
 
@@ -111,15 +117,19 @@ class WebAgent:
         #     print(f"{msg['direction']}: {msg['text']}")
 
         return pd.DataFrame(messages)
-    
+
     def goto_first_convo(self):
         self.navigate("https://www.kijiji.ca/m-msg-my-messages/")
-        conversations = self.driver.find_elements(By.CSS_SELECTOR, '[data-testid^="Conversation_"]')
+        conversations = self.driver.find_elements(
+            By.CSS_SELECTOR, '[data-testid^="Conversation_"]'
+        )
         conversations[0].click()
 
     def parse_messages(self) -> pd.DataFrame:
         self._click_messages()
-        conversations = self.driver.find_elements(By.CSS_SELECTOR, '[data-testid^="Conversation_"]')
+        conversations = self.driver.find_elements(
+            By.CSS_SELECTOR, '[data-testid^="Conversation_"]'
+        )
         total_convos = len(conversations)
         pprint(conversations)
 
@@ -129,13 +139,17 @@ class WebAgent:
         # Iterate over each conversation element and click on it
         for i in range(total_convos):
             # have to regen convo links each iteration since session id changes
-            conversations = self.driver.find_elements(By.CSS_SELECTOR, '[data-testid^="Conversation_"]')
+            conversations = self.driver.find_elements(
+                By.CSS_SELECTOR, '[data-testid^="Conversation_"]'
+            )
             conversations[i].click()
 
-            """
-            perform convo parsing logic here
-            """
-            df = self._parse_convo() if first_time else pd.concat([df, self._parse_convo()], ignore_index=True)
+            # perform convo parsing logic here
+            df = (
+                self._parse_convo()
+                if first_time
+                else pd.concat([df, self._parse_convo()], ignore_index=True)
+            )
             first_time = False
 
             time.sleep(5)
@@ -143,6 +157,20 @@ class WebAgent:
             time.sleep(5)
 
         return df
+
+    def send_message(self, message: str) -> None:
+        input_field = self.driver.find_element(
+            By.CSS_SELECTOR, 'div[class^="field"] textarea'
+        )
+
+        input_field.send_keys(message)
+        time.sleep(1)
+
+        submit_button = self.driver.find_element(
+            By.CSS_SELECTOR, 'button[data-testid="SendMessage"]'
+        )
+
+        submit_button.click()
 
     def close(self):
         # Wait for 5 seconds before closing the browser
