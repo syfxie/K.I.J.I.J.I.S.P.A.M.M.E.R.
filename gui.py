@@ -74,10 +74,29 @@ class GUI:
         self.can_retrieve_input.set(True)
         self.root.quit()  # stops main loop
 
+    def display_success(self, username, password):
+        success_gui = customtkinter.CTk()
+        success_gui.geometry("400x200")
+
+        success_label = customtkinter.CTkLabel(
+            master=success_gui, text="Success!", font=("Monaco", 20, "bold")
+        )
+        success_label.pack(pady=(30, 10))
+
+        username_label = customtkinter.CTkLabel(
+                master=success_gui, text="Username: " + username, font=("Monaco", 14)
+        )
+        username_label.pack(pady=0)
+
+        password_label = customtkinter.CTkLabel(
+                master=success_gui, text="Password: " + password, font=("Monaco", 14)
+        )
+        password_label.pack(pady=0)
+
     def retrieve_input(self):
         dic = {
             "search_item": self.search_item.get(),
-            "max_price": self.search_item.get(),
+            "max_price": self.price_range.get(),
             "is_individual": "true" if self.is_individual_var.get() == 1 else "false",
         }
         return dic

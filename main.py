@@ -1,9 +1,11 @@
-# from WebAgent import *
-# from Scraper import *
 import pandas as pd
 import time
+
 from orchestrator import Orchestrator
+from agent import MessagingAgent, FilteringAgent, DealClosingAgent
 from gui import GUI
+
+
 
 if __name__ == "__main__":
     print("start gui")
@@ -22,43 +24,54 @@ if __name__ == "__main__":
 
     print("input received from gui")
     input_data = gui.retrieve_input()
+    max_price = input_data["max_price"]
     print("input data received: ", input_data)
     
-    orchestrator = Orchestrator(count=2)
-    time.sleep(10)
+    orchestrator = Orchestrator(count=1)
+    agent_names = orchestrator.get_agent_names()
+    # negotiator = DealClosingAgent()
+
+    # Dict : DataFrame
+    inital_convos = orchestrator.get_data()
+    WINNING_AGENT_NAME = None
+    WINNER_FOUND = False
+    message_agent = MessagingAgent(target_price=max_price)
+    closing_agent = DealClosingAgent()
+    while not WINNER_FOUND:
+        is_update = orchestrator.check_for_update()
+        if is_update: 
+            print("THERE IS AN UPDATE -----")
+            agents_to_respond, messages = orchestrator.get_data()
+            print("New messages: ", messages)
+            print(f"Most Recent Agent: {agents_to_respond}")
+
+            for name in orchestrator.get_agent_names():
+                msg = messages[name]
+                print("!!!checking win condition!!!")
+                print(name)
+                print(msg)
+                if closing_agent.check_deal_status(msg):
+                    WINNING_AGENT_NAME = name
+                    WINNER_FOUND = True
+                    break
+            if WINNER_FOUND: break
+
+            next_messages = message_agent.gen_next_msg(messages, agents_to_respond)
+            if len(agents_to_respond) > 0:
+                for agent in agents_to_respond:
+                    orchestrator.send_message(agent, next_messages[agent])
+
+            print("Agent responses: ", next_messages)
+
+        time.sleep(2)
+
     orchestrator.close()
 
+    print(WINNING_AGENT_NAME)
+    WINNING_USER, WINNING_PASS = orchestrator.get_agent_info(WINNING_AGENT_NAME) 
+    gui.display_success(WINNING_USER, WINNING_PASS)
 
-    # web_agent = WebAgent()
-    # scraper = KijijiScraper()
+    time.sleep(10)
 
-    # search_url = web_agent.search_kijiji("rtx-4090")
-    
-    # df = scraper.scrape_search_result(search_url)
+    input("press enter to close...")
 
-    # web_agent.close()
-    # df.to_excel("data.xlsx", engine="xlsxwriter", index=False)
-
-    # web_agent = WebAgent()
-    # # search_url = web_agent.search_kijiji("rtx-4090")
-
-    # # scraper = KijijiScraper()
-    # #
-    # # df = scraper.scrape(search_url)
-    # # print(df)
-    # df = pd.DataFrame()
-
-    # web_agent.login_kijiji(
-    #     username="",
-    #     password="",
-    # )
-
-    # messages = web_agent.parse_messages()
-
-    # # Pause the script and keep the browser open
-    # input("Press Enter to close the browser...")
-
-    # # Close the browser after the user presses Enter
-    # web_agent.close()
-
-    # messages.to_excel("data.xlsx", engine="xlsxwriter", index=False)

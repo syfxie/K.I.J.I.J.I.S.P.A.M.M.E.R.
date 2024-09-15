@@ -110,11 +110,11 @@ class WebAgent:
             )  # This assumes the text is directly within the message element
 
             # Add the message to the list with its direction
-            messages.append({"direction": direction, "text": message_text})
+            messages.append({"direction": "buyer" if direction == "OUTBOUND" else "seller", "text": message_text})
 
         # Print the messages to verify
-        for msg in messages:
-            print(f"{msg['direction']}: {msg['text']}")
+        # for msg in messages:
+        #     print(f"{msg['direction']}: {msg['text']}")
 
         return pd.DataFrame(messages)
 
