@@ -1,14 +1,9 @@
-import os
 import json
 import cohere
-from dotenv import load_dotenv
 
 import prompts
 from utils import *
 
-# Load environment variables from .env file
-load_dotenv()
-API_KEY = os.getenv("COHERE_API_KEY")
 
 # Response format of the client
 response_format = {

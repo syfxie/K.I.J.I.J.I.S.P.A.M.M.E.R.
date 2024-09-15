@@ -1,10 +1,6 @@
-import os
 import json
 import cohere
-from dotenv import load_dotenv
 
-load_dotenv()
-API_KEY = os.getenv("COHERE_API_KEY")
 
 SYSTEM_MSG = """
 You are an expert negotiation agent with the ability to analyze and understand conversations between buyers and sellers. Given the following chat history, your task is to determine if a deal has been reached.

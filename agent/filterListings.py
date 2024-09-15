@@ -1,14 +1,11 @@
-import os 
+
 import ast
 import json 
-from dotenv import load_dotenv
 import pandas as pd
 import cohere
 
 from chat import MessagingAgent
 
-load_dotenv()
-API_KEY = os.getenv("COHERE_API_KEY")
 
 SYSTEM_MSG = """
     Your are a product recommendation assistant. Find the top 5 most relevant and credible listings based on the user query, and return their URL's.
