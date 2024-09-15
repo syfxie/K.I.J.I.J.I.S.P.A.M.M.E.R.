@@ -55,16 +55,21 @@ class MessagingAgent:
             print(f"Error generating initial message: {e}")
             return {}
 
+
     def gen_next_msg(self, msg_history: dict) -> str:
         """
         Generate the next message for each personality based on the provided message history.
         
         Args:
-            msg_history (dict): Dictionary of negotiation histories for each personality. Each personality
-                                has a history of alternating 'user' and 'seller' messages.
+            msg_history (dict): Dictionary of message histories for each personality.
         
         Returns:
             dict: The dictionary of the next message to send for each personality.
+            Ex: {
+                "casual": "Hmm, let me think about that."
+                "urgent": "",
+                "lowball": "Sounds good, how about tomorrow".
+            }
         """
         prompt = prompts.next_msg_prompt(msg_history)
 

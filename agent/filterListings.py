@@ -93,6 +93,7 @@ def str_to_list(s):
     print(s)
     return s
 
+
 if __name__ == '__main__':
     agent = FilteringAgent(SYSTEM_MSG)
     print(agent.get_recommendations("I want a ThinkPad", listings_path=listings_excel_path))
