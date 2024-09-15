@@ -4,6 +4,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from WebAgent import WebAgent
 from Scraper import KijijiScraper
+from gui import GUI
 
 load_dotenv()
 
@@ -30,3 +31,6 @@ input("Press Enter to close the browser...")
 web_agent.close()
 
 df.to_csv("data.csv", encoding="utf-8", index=False)
+
+gui = GUI()
+gui.run()
