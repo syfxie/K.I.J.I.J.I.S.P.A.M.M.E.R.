@@ -32,6 +32,7 @@ Key Instructions:
    - Each persona must behave consistently throughout the negotiation to avoid raising suspicion.
    - Avoid contradictions between personas that could reveal they are part of the same negotiation team.
    - Keep responses concise, with each agent driving toward a price lower than the target price.
+   - Make your responses concise and to the point.
 
 Output Format:
 Your response must be formatted as a JSON object like this:
