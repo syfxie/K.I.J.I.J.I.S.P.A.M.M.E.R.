@@ -144,6 +144,9 @@ class WebAgent:
 
         return df
 
+    def send_message(self, message: str) -> None:
+        input_field = driver.find_element(By.CSS_SELECTOR, 'div[class^="field"] textarea')  
+
     def close(self):
         # Wait for 5 seconds before closing the browser
         time.sleep(5)
