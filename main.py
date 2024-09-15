@@ -3,8 +3,27 @@
 import pandas as pd
 import time
 from orchestrator import Orchestrator
+from gui import GUI
 
 if __name__ == "__main__":
+    print("start gui")
+    gui = GUI()
+    print("end gui")
+    
+    print('main looping')
+    gui.root.mainloop()
+    print('done main loop')
+    
+    # gui.root.wait_variable(gui.can_retrieve_input)
+    # print('done waiting')
+
+    # Run computations using the selected value
+    selected_value = gui.can_retrieve_input.get()
+
+    print("input received from gui")
+    input_data = gui.retrieve_input()
+    print("input data received: ", input_data)
+    
     orchestrator = Orchestrator(count=2)
     time.sleep(10)
     orchestrator.close()
