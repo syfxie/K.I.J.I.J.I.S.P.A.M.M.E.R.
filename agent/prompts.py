@@ -72,7 +72,7 @@ Condition: Mint, no scratches or scuffs. Kept in a case and screen protector fro
 Battery Health: 100%
 Includes original box and accessories (charger, cable, etc.).
 Unlocked: Can be used with any carrier.
-Listed price: 1000,
+Listed price: 1000
 
 You want to coordinate negotations with your different personalities to reach a price of: 800.
 """
@@ -97,10 +97,10 @@ def next_msg_prompt(msgs):
 
     Return: a JSON with the next message for each user.
         {
-            "Agent 1": casual buyer's next message, or "" if no new message was received from the seller.
-            "Agent 2": rude buyer's next message, or "" if no new message was received from the seller.
-            "Agent 3": lowball buyer's next message, or "" if no new message was received from the seller.
-            "Agent 4": urgent buyer's next message, or "" if no new message was received from the seller.
+            "Agent 1": casual buyer's next message
+            "Agent 2": rude buyer's next message
+            "Agent 3": lowball buyer's next message
+            "Agent 4": urgent buyer's next message
         }
     Args:
         history (dict of dicts): {
@@ -124,9 +124,7 @@ Below are the negotiation histories for four different personalities:
 
 {msgs}
 
-Determine the next message for each personality. 
-If no response/if the seller sent the last message, then return an empty string for that agent. You don't want the agent to send two messages in a row.
-
+Determine the next message based on the personality of each agent. 
 Your goal is to negotiate the best price. Adapt each personality's strategy accordingly and coordinate the personalities to work together.
 """
     return prompt

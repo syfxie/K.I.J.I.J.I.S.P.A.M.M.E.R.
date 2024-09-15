@@ -6,6 +6,10 @@ from agent import MessagingAgent, FilteringAgent, DealClosingAgent
 
 
 if __name__ == "__main__":
+
+    # TODO: Change this once the GUI is set up
+    target_price = 800
+
     orchestrator = Orchestrator(count=2)
     agent_names = orchestrator.get_agent_names()
     # negotiator = DealClosingAgent()
@@ -20,7 +24,7 @@ if __name__ == "__main__":
             print("New messages: ", messages)
             print(f"Most Recent Agent: {agents_to_respond}")
 
-            agent = MessagingAgent()
+            agent = MessagingAgent(target_price=target_price)
             next_messages = agent.gen_next_msg(messages, agents_to_respond)
             print("Agent responses: ", next_messages)
 

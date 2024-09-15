@@ -21,7 +21,7 @@ response_format = {
 }
 
 class MessagingAgent:
-    def __init__(self, system_msg=prompts.MSG_AGENT_SYSTEM_MSG, product_description=prompts.PRODUCT_DESCRIOTION_EXAMPLE) -> None:
+    def __init__(self, system_msg=prompts.MSG_AGENT_SYSTEM_MSG, target_price=800, product_description=prompts.PRODUCT_DESCRIOTION_EXAMPLE) -> None:
         """
         Initialize the MessagingAgent with the provided system message and product description.
         
@@ -29,11 +29,13 @@ class MessagingAgent:
             system_msg (str): The system message to be used in the chat history.
             product_description (str): The product description to be used in the chat history.
         """
+        
         self.client = cohere.Client(API_KEY, log_warning_experimental_features=False)
         self.history = [
             {"role": "SYSTEM", "text": system_msg},
-            {"role": "USER", "text": product_description}
+            {"role": "USER", "text": product_description + f" \nTarget price: {target_price}"}
         ]
+        self.target_price = target_price
     
     def gen_initial_msg(self) -> str:
         """
@@ -73,6 +75,7 @@ class MessagingAgent:
             }
         """
         prompt = prompts.next_msg_prompt(msg_history)
+        prompt += f" \nTarget price: {self.target_price}"
 
         try:
             response = self.client.chat(
@@ -83,6 +86,8 @@ class MessagingAgent:
             )
             self.history = response.chat_history
             response_json = json.loads(response.text)
+
+            print("RAW: ", response_json)
 
             # Only return responses for agents that received messages from the seller
             for key in response_json.keys():
