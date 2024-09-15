@@ -1,3 +1,57 @@
-.env
-*.csv
+# Python-specific
+*.pyc
+*.pyo
+*.pyd
 __pycache__/
+env/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Environment variable files
+.env
+
+# IDE and editor-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Coverage reports
+coverage/
+*.cover
+*.py,cover
+
+# Test and temporary files
+*.tmp
+*.bak
+
+# Database files
+*.sqlite3
+*.db
+*.csv
+
+# Sphinx documentation
+docs/_build/
+
+# PyInstaller
+*.spec
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# excel
+*.xlsx
