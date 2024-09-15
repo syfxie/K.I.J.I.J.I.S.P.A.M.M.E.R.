@@ -1,11 +1,10 @@
-
 import ast
 import json 
 import pandas as pd
 import cohere
 
 from chat import MessagingAgent
-
+from utils import *
 
 SYSTEM_MSG = """
     Your are a product recommendation assistant. Find the top 5 most relevant and credible listings based on the user query, and return their URL's.
@@ -23,8 +22,8 @@ SYSTEM_MSG = """
     - list of str: A list of the top 5 URLs that best match the user query.
 """
 
-listings_excel_path = "agent/data.xlsx"
-dest_excel_path = "agent/initial_msgs.xlsx"
+listings_excel_path = "data.xlsx"
+dest_excel_path = "initial_msgs.xlsx"
 
 
 class FilteringAgent():
