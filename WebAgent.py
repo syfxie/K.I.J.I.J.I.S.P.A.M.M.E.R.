@@ -1,7 +1,8 @@
 import time
-from pprint import pprint
 
 import pandas as pd
+
+from pprint import pprint
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -9,9 +10,9 @@ from selenium.webdriver.chrome.service import Service
 
 
 class WebAgent:
-    def __init__(self):
+    def __init__(self, chrome_path: str = "/usr/local/bin/chromedriver"):
         # Launch Chrome with specified settings
-        service = Service(executable_path="/usr/local/bin/chromedriver")
+        service = Service(executable_path=chrome_path)
         options = webdriver.ChromeOptions()
         self.driver = webdriver.Chrome(service=service, options=options)
 
@@ -27,7 +28,6 @@ class WebAgent:
         Returns:
             str: URL after searching for the target item
         """
-
         self.driver.get("http://kijiji.ca")
 
         search_bar = self.driver.find_element(By.ID, "global-header-search-bar-input")
@@ -42,7 +42,24 @@ class WebAgent:
         print(f"Search completed. Current URL: {search_url}")
         return search_url
 
-    def login_kijiji(self, username: str, password: str):
+    def navigate(self, url: str):
+        """Navigate to the specified URL.
+
+        Args:
+            url (str): URL to navigate to
+        """
+        self.driver.get(url)
+
+    def set_name(self, name: str):
+        self.name = name
+    
+    def set_username(self, username: str):
+        self.username = username
+
+    def set_password(self, password: str):  
+        self.password = password
+
+    def login_kijiji(self):
         self.driver.get("http://kijiji.ca")
 
         # Click on the Sign In button
@@ -55,8 +72,8 @@ class WebAgent:
         sign_in_button = self.driver.find_element(
             By.CSS_SELECTOR, "button#login-submit"
         )
-        email_address_box.send_keys(username)
-        password_box.send_keys(password)
+        email_address_box.send_keys(self.username)
+        password_box.send_keys(self.password)
         sign_in_button.click()
 
     def _click_messages(self) -> None:
@@ -93,11 +110,21 @@ class WebAgent:
         for msg in messages:
             print(f"{msg['direction']}: {msg['text']}")
 
+        return pd.DataFrame(messages)
+    
+    def goto_first_convo(self):
+        self.navigate("https://www.kijiji.ca/m-msg-my-messages/")
+        conversations = self.driver.find_elements(By.CSS_SELECTOR, '[data-testid^="Conversation_"]')
+        conversations[0].click()
+
     def parse_messages(self) -> pd.DataFrame:
         self._click_messages()
         conversations = self.driver.find_elements(By.CSS_SELECTOR, '[data-testid^="Conversation_"]')
         total_convos = len(conversations)
         pprint(conversations)
+
+        first_time = True
+        df = None
 
         # Iterate over each conversation element and click on it
         for i in range(total_convos):
@@ -108,13 +135,14 @@ class WebAgent:
             """
             perform convo parsing logic here
             """
-            self._parse_convo()
+            df = self._parse_convo() if first_time else pd.concat([df, self._parse_convo()], ignore_index=True)
+            first_time = False
 
             time.sleep(5)
             self.driver.back()
             time.sleep(5)
 
-        return pd.DataFrame()
+        return df
 
     def close(self):
         # Wait for 5 seconds before closing the browser
